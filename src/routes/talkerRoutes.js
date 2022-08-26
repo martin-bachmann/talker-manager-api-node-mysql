@@ -17,7 +17,17 @@ const readTalkerFile = async () => {
 
 router.get('/', async (req, res) => {
   const talkers = await readTalkerFile();
-  res.status(200).json(talkers);
+  return res.status(200).json(talkers);
+});
+
+router.get('/:id', async (req, res) => {
+  const { id } = req.params;
+  const talkers = await readTalkerFile();
+  const talker = talkers.find((element) => element.id === Number(id));
+  if (talker) return res.status(200).json(talker);
+  return res.status(404).json({
+    message: 'Pessoa palestrante não encontrada',
+  });
 });
 
 module.exports = router;
