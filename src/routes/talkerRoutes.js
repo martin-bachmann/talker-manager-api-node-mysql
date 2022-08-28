@@ -72,6 +72,23 @@ router.put('/:id',
     return res.status(404).json({
       message: 'Pessoa palestrante não encontrada',
     });
-  });
+});
+
+router.delete('/:id',
+  authenticateToken,
+  async (req, res) => {
+    const { id } = req.params;
+    const talkers = await readFile(TALKER_PATH);
+    const selectedTalker = talkers.find((talker) => talker.id === Number(id));
+    if (selectedTalker) {
+      const index = talkers.indexOf(selectedTalker);
+      talkers.splice(index, 1);
+      await writeFile(TALKER_PATH, talkers);
+      return res.status(204).end();
+    }
+    return res.status(404).json({
+      message: 'Pessoa palestrante não encontrada',
+    });
+});
 
 module.exports = router;
